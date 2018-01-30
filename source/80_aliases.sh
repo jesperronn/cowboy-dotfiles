@@ -11,6 +11,9 @@ alias dcompose='docker-compose'
 #from http://stackoverflow.com/questions/68372/what-is-your-single-most-favorite-command-line-trick-using-bash#68390
 alias tophist="history | awk '{print \$4}' | awk 'BEGIN{FS=\"|\"}{print \$1}' | sort | uniq -c | sort -n | tail | sort -nr"
 
+# GPG requirement from https://help.github.com/articles/telling-git-about-your-gpg-key/
+# test if needed with `echo "test" | gpg --clearsign`
+export GPG_TTY=$(tty)
 
 # Homebrew cask install of firefox. To help test runners like Karma-firefox:
 export FIREFOX_BIN="/opt/homebrew-cask/Caskroom/firefox/latest/Firefox.app/Contents/MacOS/firefox-bin"
