@@ -1,13 +1,18 @@
 [user]
   name    = Jesper Rønn-Jensen
   email   = EMAIL
+  signingkey = _fill in the gpg key here_
+[github]
+  user  = jesperronn
 [github]
   user  = jesperronn
 [core]
   autocrlf     = input
   whitespace   = fix,space-before-tab,tab-in-indent,trailing-space
   excludesfile = ~/.gitignore_global
-  # editor       = mvim -f
+  editor       = mvim -f
+  pager        = "less -M"
+  pager        = "less -M -F -X"
 [apply]
   whitespace   = fix
 [color]
@@ -16,21 +21,8 @@
   branch       = auto
   ui           = auto
   interactive  = auto
-[color "branch"]
-  current = yellow reverse
-  local = yellow
-  remote = green
-[color "diff"]
-  meta = yellow bold
-  frag = magenta bold
-  old = red bold
-  new = green bold
-[color "status"]
-  added = yellow
-  changed = green
-  untracked = cyan
-
 [alias]
+  git          = !exec git
   st           = status -bs
   ci           = commit
   co           = checkout
@@ -39,11 +31,21 @@
   g            = grep --break --heading --line-number
   root         = rev-parse --show-toplevel
   cdroot       = !cd $(git root)
+  sha          = rev-parse HEAD
   taglist      = show-ref --tags --abbrev
 
-  lol          = log --oneline --graph --decorate
-  ls = log --pretty=\"%C(red)%<(10,trunc)%cr%C(green) %<(8,trunc)%h %C(reset)%<(12,trunc)%an%C(yellow)%<(60,trunc)% s%C(blue)% ai%C(reset)%C(dim)%+d%C(reset)\" --abbrev-commit --decorate=short
+  # available short color formats:  normal, black, red, green, yellow, blue, magenta, cyan and white. First color: foreground; Second: background.
+  ls  = log --pretty=\"%C(green)%h %C(blue dim)%<(7,trunc)%cr %C(cyan)%G? %C(magenta dim)%<(13,trunc)%an%C(reset)%C(normal)%<(80,trunc)% s%C(blue dim)% ai%C(reset)%C(auto)%+d%C(reset)\" --abbrev-commit --decorate=short
+  lsh = log --pretty=\"%C(green)%h %C(blue dim)%<(7,trunc)%cr %C(cyan)%G? %C(magenta dim)%<(13,trunc)%an%C(reset)%C(normal)%<(60,trunc)% s%C(reset)%C(auto)%+d%C(reset)\" --abbrev-commit --decorate=short
+  lsa = log --stat --graph --decorate --all
+# stats shorcuts fra https://gist.github.com/hofmannsven/6814278
+  stats        = log -10 --dirstat=files,1,cumulative --ignore-blank-lines --abbrev-commit --oneline --graph --decorate
+  rebasesign   = rebase --exec 'git commit --amend --no-edit -n -S'
 
+# check-whitespace usage:
+  # git check-whitespace | grep trailing | cut -d: -f1 | uniq -u -z | xargs -0 sed --in-place -e 's/[ \t]+$//'
+  # from https://stackoverflow.com/a/40371757/109305
+  check-whitespace = !git diff-tree --check $(git hash-object -t tree /dev/null) HEAD
 
 [fetch]
   recurseSubmodules = true
@@ -65,3 +67,12 @@
 
 [credential]
   helper       = store --file=~/.git-credentials
+[filter "lfs"]
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+  required = true
+[commit]
+  gpgsign = false
+[gpg]
+  program = gpg
