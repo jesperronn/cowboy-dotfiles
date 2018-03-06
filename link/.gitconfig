@@ -13,7 +13,7 @@
   excludesfile = ~/.gitignore_global
   editor       = mvim -f
   pager        = "less -M"
-  pager        = "less -M -F -X"
+  pager        = "less -M -F -X -S"
 [apply]
   whitespace   = fix
 [color]
