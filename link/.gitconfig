@@ -1,7 +1,8 @@
 [user]
-  name    = Jesper Rønn-Jensen
-  email   = EMAIL
-  signingkey = _fill in the gpg key here_
+  # These values are set in ~/.gitconfig_local
+  # see https://stackoverflow.com/a/42571751/109305
+[include]
+      path = ./.gitconfig_local
 [github]
   user  = jesperronn
 [github]
