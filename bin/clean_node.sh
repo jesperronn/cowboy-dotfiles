@@ -6,14 +6,15 @@
 # script is executed
 #
 # By Alejandro Soto, 2016
+# Modified 1.1 by Jesper 2018-05
 
 echo
-echo "node_modules remover v1.0"
+echo "node_modules remover v1.1"
 echo
 
 cd $1
 
-for i in $(find . -name node_modules -type d); do
+for i in $(find . -name node_modules -d 3 -type d); do
         if [ $(grep -o "node_modules" <<<"$i" | wc -l) == 1 ]
         then
                 echo "$(du -sh $i)"
