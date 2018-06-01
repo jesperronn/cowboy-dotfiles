@@ -28,6 +28,7 @@
   ci           = commit
   co           = checkout
   br           = branch
+  cp           = cherry-pick
   lol          = log --oneline --graph --decorate
   g            = grep --break --heading --line-number
   root         = rev-parse --show-toplevel
