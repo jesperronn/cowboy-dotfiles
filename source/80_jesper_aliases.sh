@@ -1,12 +1,10 @@
 alias cdv='cd ~/src/cancerventetid'
 alias cdp='cd ~/src/nine/pplus/plus-reporter'
-alias cdc='cd ~/src/nine/csc/all_dev'
-alias cds='cd ~/src/nine/skat/Bogfoeringsguiden'
 alias cdn='cd ~/src/nine'
 alias cdk='cd ~/src/karnov'
 alias cda='cd ~/src/karnov/amp'
 alias cdg='cd ~/src/karnov/gitifier'
-alias cdpi='cd ~/src/karnov/kg-pipeline/pipelines/karnov-bridge'
+alias cdpi='cd ~/src/karnov/kg-pipeline/'
 
 #alias kk="K=$(cdk && pwd);echo $K;"
 # function _kgProjects(){
