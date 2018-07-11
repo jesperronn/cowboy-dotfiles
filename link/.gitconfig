@@ -52,8 +52,6 @@
 [fetch]
   recurseSubmodules = true
   prune        = true
-[push]
-  default = simple
 [merge]
   log = true
 [submodule]
