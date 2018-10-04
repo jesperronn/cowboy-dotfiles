@@ -6,8 +6,6 @@ is_osx || return 1
 
 # Homebrew recipes
 recipes=(
-  ansible
-  awscli
   bash
   coreutils
   git
@@ -22,13 +20,11 @@ recipes=(
 
   #jespers recipes below
   bash-completion
-  cmake
   curl
   heroku-toolbelt
   hub
   nvm
-  postgresql
-  python
+  postgresql@9.6
   python3
   shellcheck
   spark

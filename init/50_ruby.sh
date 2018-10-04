@@ -7,3 +7,5 @@ setopt interactivecomments
 if [[ -s ~/.rvm/scripts/rvm ]] ; then source ~/.rvm/scripts/rvm ; fi
 rvm get head
 rvm reload
+
+rvm requirements
