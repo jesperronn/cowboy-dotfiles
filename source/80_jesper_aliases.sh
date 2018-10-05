@@ -27,6 +27,18 @@ export OCI_DIR="$(brew --prefix)/lib"
 # `export HOMEBREW_CACHE=$HOME/Downloads/``
 
 
+# for homebrew upgrade, always remove old versions:
+# If --cleanup is specified or HOMEBREW_UPGRADE_CLEANUP is set then remove
+#     previously installed version(s) of upgraded formulae.
+export HOMEBREW_UPGRADE_CLEANUP=true
+# The GitHub credentials in the macOS keychain may be invalid.
+# Clear them with:
+#   printf "protocol=https\nhost=github.com\n" | git credential-osxkeychain erase
+# Or create a personal access token:
+#   https://github.com/settings/tokens/new?scopes=gist,public_repo&description=Homebrew
+# and then set the token as: export HOMEBREW_GITHUB_API_TOKEN="your_new_token"
+# Github api for homebrew
+
 
  # bintray
  export BINTRAY_USERNAME=jesperronn
