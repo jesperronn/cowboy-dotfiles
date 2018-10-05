@@ -7,7 +7,8 @@ function src() {
   if [[ "$1" ]]; then
     source "$DOTFILES/source/$1.sh"
   else
-    for file in $DOTFILES/source/*; do
+    for file in $DOTFILES/source/*.sh; do
+      echo "sourcing $file"
       source "$file"
     done
   fi
