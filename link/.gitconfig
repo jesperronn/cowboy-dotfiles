@@ -50,7 +50,7 @@
   check-whitespace = !git diff-tree --check $(git hash-object -t tree /dev/null) HEAD
 
 [fetch]
-  recurseSubmodules = true
+        recursesubmodules = true
   prune        = true
 [merge]
   log = true
@@ -71,10 +71,10 @@
 [credential]
   helper       = store --file=~/.git-credentials
 [filter "lfs"]
-  clean = git-lfs clean -- %f
-  smudge = git-lfs smudge -- %f
-  process = git-lfs filter-process
-  required = true
+        required = true
+        clean = git-lfs clean -- %f
+        smudge = git-lfs smudge -- %f
+        process = git-lfs filter-process
 [commit]
   gpgsign = false
 [gpg]
