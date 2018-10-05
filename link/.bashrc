@@ -8,7 +8,6 @@ function src() {
     source "$DOTFILES/source/$1.sh"
   else
     for file in $DOTFILES/source/*.sh; do
-      echo "sourcing $file"
       source "$file"
     done
   fi
