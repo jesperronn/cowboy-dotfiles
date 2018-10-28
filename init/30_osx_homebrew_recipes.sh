@@ -22,6 +22,7 @@ recipes=(
   #jespers recipes below
   bash-completion
   curl
+  exiftool
   heroku-toolbelt
   hub
   nvm

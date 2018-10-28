@@ -77,5 +77,53 @@
         process = git-lfs filter-process
 [commit]
   gpgsign = false
+        template = ~/.stCommitMsg
 [gpg]
   program = gpg
+
+# below a section to setup diffing of compressed/binary file formats
+[core]
+  attributesFile = ~/.gitattributes
+[diff "zip"]
+  textconv = unzip -p
+  binary = true
+[diff "gz"]
+  textconv = gzcat
+  binary = true
+[diff "bz2"]
+  textconv = bzcat
+  binary = true
+[diff "xz"]
+  textconv = xzcat
+  binary = true
+[diff "tar"]
+  textconv = tar -O -xf
+  binary = true
+[diff "tar-bz2"]
+  textconv = tar -O -xjf
+  binary = true
+[diff "tar-gz"]
+  textconv = tar -O -xzf
+  binary = true
+[diff "tar-xz"]
+  textconv = tar -O -xJf
+  binary = true
+
+[diff "odf"]
+  textconv = odt2txt
+[diff "pdf"]
+  textconv = pdfinfo
+[diff "excel"]
+  textconv = unzip -c -a
+  textconv = unzip -c
+  textconv = unzip -c -aa
+  textconv = unzip -c ---a
+  binary = true
+
+
+[diff "bin"]
+  textconv = hexdump -v -C
+
+# images require `brew install exiftool`
+[diff "image"]
+  textconv = exiftool
