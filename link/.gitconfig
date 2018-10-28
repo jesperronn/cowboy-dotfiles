@@ -2,11 +2,7 @@
   # These values are set in ~/.gitconfig_local
   # see https://stackoverflow.com/a/42571751/109305
 [include]
-      path = ./.gitconfig_local
-[github]
-  user  = jesperronn
-[github]
-  user  = jesperronn
+  path = ./.gitconfig_local
 [core]
   autocrlf     = input
   whitespace   = fix,space-before-tab,tab-in-indent,trailing-space
