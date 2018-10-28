@@ -37,8 +37,8 @@
   taglist      = show-ref --tags --abbrev
 
   # available short color formats:  normal, black, red, green, yellow, blue, magenta, cyan and white. First color: foreground; Second: background.
-  ls  = log --pretty=\"%C(green)%h %C(blue dim)%<(7,trunc)%cr %C(cyan)%G? %C(magenta dim)%<(13,trunc)%an%C(reset)%C(normal)%<(80,trunc)% s%C(blue dim)% ai%C(reset)%C(auto)%+d%C(reset)\" --abbrev-commit --decorate=short
-  lsh = log --pretty=\"%C(green)%h %C(blue dim)%<(7,trunc)%cr %C(cyan)%G? %C(magenta dim)%<(13,trunc)%an%C(reset)%C(normal)%<(60,trunc)% s%C(reset)%C(auto)%+d%C(reset)\" --abbrev-commit --decorate=short
+  ls  = log --pretty=\"%C(green)%h %C(blue)%<(7,trunc)%cr %C(cyan)%G? %C(magenta)%<(13,trunc)%an%C(reset)%C(normal)%<(80,trunc)% s%C(blue)% ai%C(reset)%C(auto)%+d%C(reset)\" --abbrev-commit --decorate=short
+  lsh = log --pretty=\"%C(green)%h %C(blue)%<(7,trunc)%cr %C(cyan)%G? %C(magenta)%<(13,trunc)%an%C(reset)%C(normal)%<(60,trunc)% s%C(reset)%C(auto)%+d%C(reset)\" --abbrev-commit --decorate=short
   lsa = log --stat --graph --decorate --all
 # stats shorcuts fra https://gist.github.com/hofmannsven/6814278
   stats        = log -10 --dirstat=files,1,cumulative --ignore-blank-lines --abbrev-commit --oneline --graph --decorate
