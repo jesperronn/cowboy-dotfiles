@@ -24,6 +24,7 @@
   ci           = commit
   co           = checkout
   br           = branch
+  brs          = branch --sort committerdate
   cp           = cherry-pick
   lol          = log --oneline --graph --decorate
   g            = grep --break --heading --line-number
