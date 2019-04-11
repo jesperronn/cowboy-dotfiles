@@ -40,6 +40,8 @@
 # stats shorcuts fra https://gist.github.com/hofmannsven/6814278
   stats        = log -10 --dirstat=files,1,cumulative --ignore-blank-lines --abbrev-commit --oneline --graph --decorate
   rebasesign   = rebase --exec 'git commit --amend --no-edit -n -S'
+  # clean/remove merged branches
+  cleanbranches =  !git branch --merged master | grep -v master |xargs git branch -d
 
 # check-whitespace usage:
   # git check-whitespace | grep trailing | cut -d: -f1 | uniq -u -z | xargs -0 sed --in-place -e 's/[ \t]+$//'
@@ -47,7 +49,7 @@
   check-whitespace = !git diff-tree --check $(git hash-object -t tree /dev/null) HEAD
 
 [fetch]
-        recursesubmodules = true
+  recursesubmodules = true
   prune        = true
 [merge]
   log = true
