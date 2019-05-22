@@ -12,6 +12,10 @@ alias cdpi='cd ~/src/karnov/kg-pipeline/'
 # }
 # alias karnovUpdate="C=$(pwd);cdk; pwd; for f in $(_kgProjects); do cd \$f; pwd; git fetch; cd -; done;cd \$C"
 
+
+alias k='kubectl'
+alias j='jinborov'
+
 # EDITOR update for bundler
 export BUNDLER_EDITOR=atom
 
