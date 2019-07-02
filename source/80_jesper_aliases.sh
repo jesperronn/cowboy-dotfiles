@@ -1,10 +1,6 @@
 alias cdv='cd ~/src/cancerventetid'
 alias cdp='cd ~/src/nine/pplus/plus-reporter'
 alias cdn='cd ~/src/nine'
-alias cdk='cd ~/src/karnov'
-alias cda='cd ~/src/karnov/amp'
-alias cdg='cd ~/src/karnov/gitifier'
-alias cdpi='cd ~/src/karnov/kg-pipeline/'
 
 #alias kk="K=$(cdk && pwd);echo $K;"
 # function _kgProjects(){
@@ -14,7 +10,6 @@ alias cdpi='cd ~/src/karnov/kg-pipeline/'
 
 
 alias k='kubectl'
-alias j='jinborov'
 
 # EDITOR update for bundler
 export BUNDLER_EDITOR=atom
