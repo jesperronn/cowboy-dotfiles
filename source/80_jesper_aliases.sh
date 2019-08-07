@@ -2,14 +2,20 @@ alias cdv='cd ~/src/cancerventetid'
 alias cdp='cd ~/src/nine/pplus/plus-reporter'
 alias cdn='cd ~/src/nine'
 
-#alias kk="K=$(cdk && pwd);echo $K;"
-# function _kgProjects(){
-#   echo "stackedit amp content-store metadata-store missing-link xml-toolbox gitifier kg-site kg-site-assets kg-pipeline"
-# }
-# alias karnovUpdate="C=$(pwd);cdk; pwd; for f in $(_kgProjects); do cd \$f; pwd; git fetch; cd -; done;cd \$C"
-
-
 alias k='kubectl'
+
+
+# Cisco vpn credentials can be fired from command line. copy this file
+# and use it like this:
+# /opt/cisco/anyconnect/bin/vpn connect lev-vpn-fw.regionh.dk -s < ~.ssh/.credentials.regionh
+#
+# tip from https://apple.stackexchange.com/a/260928/3403
+# and https://superuser.com/questions/649614/connect-using-anyconnect-from-command-line
+alias vpn='/opt/cisco/anyconnect/bin/vpn'
+alias vpndisconnect='/opt/cisco/anyconnect/bin/vpn disconnect'
+alias vpnconnect_karnov='/opt/cisco/anyconnect/bin/vpn connect vpn.karnovgroup.com/User -s < ~/.ssh/.credentials.karnov'
+alias vpnconnect_regionh='/opt/cisco/anyconnect/bin/vpn connect lev-vpn-fw.regionh.dk -s < ~/.ssh/.credentials.regionh'
+# printf 'USERNAME\nPASSWORD\n' | /opt/cisco/anyconnect/bin/vpn -s connect lev-vpn-fw.regionh.dk
 
 # EDITOR update for bundler
 export BUNDLER_EDITOR=atom
