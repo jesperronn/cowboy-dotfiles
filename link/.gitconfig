@@ -57,6 +57,7 @@
   fetchjobs    = 8
 [log]
   abbrevCommit = true
+        follow = true
 [push]
   default      = current
 [rebase]
