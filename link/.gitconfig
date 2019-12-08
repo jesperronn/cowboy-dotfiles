@@ -20,30 +20,36 @@
   interactive  = auto
 [alias]
   git          = !exec git
+
   st           = status -bs
   ci           = commit
   co           = checkout
   br           = branch
   brs          = branch --sort committerdate
   cp           = cherry-pick
-  lol          = log --oneline --graph --decorate
   g            = grep --break --heading --line-number
   root         = rev-parse --show-toplevel
   cdroot       = !cd $(git root)
   sha          = rev-parse HEAD
   taglist      = show-ref --tags --abbrev
+  alias        = ! git config --get-regexp ^alias\\.
+
+  # After a rebase, when you run it, it resets all of the commit dates to the author dates
+  # so your commit logs on github / gitlab show up in proper chronological order, instead of the moment of the rebase.
+  redate = rebase --committer-date-is-author-date
 
   # available short color formats:  normal, black, red, green, yellow, blue, magenta, cyan and white. First color: foreground; Second: background.
   ls  = log --pretty=\"%C(green)%h %C(blue)%<(7,trunc)%cr %C(cyan)%G? %C(magenta)%<(13,trunc)%an%C(reset)%C(normal)%<(80,trunc)% s%C(blue)% ai%C(reset)%C(auto)%+d%C(reset)\" --abbrev-commit --decorate=short
   lsh = log --pretty=\"%C(green)%h %C(blue)%<(7,trunc)%cr %C(cyan)%G? %C(magenta)%<(13,trunc)%an%C(reset)%C(normal)%<(60,trunc)% s%C(reset)%C(auto)%+d%C(reset)\" --abbrev-commit --decorate=short
   lsa = log --stat --graph --decorate --all
-# stats shorcuts fra https://gist.github.com/hofmannsven/6814278
+  lol = log --oneline --graph --decorate
+  # stats shorcuts fra https://gist.github.com/hofmannsven/6814278
   stats        = log -10 --dirstat=files,1,cumulative --ignore-blank-lines --abbrev-commit --oneline --graph --decorate
   rebasesign   = rebase --exec 'git commit --amend --no-edit -n -S'
   # clean/remove merged branches
   cleanbranches =  !git branch --merged master | grep -v master |xargs git branch -d
 
-# check-whitespace usage:
+  # check-whitespace usage:
   # git check-whitespace | grep trailing | cut -d: -f1 | uniq -u -z | xargs -0 sed --in-place -e 's/[ \t]+$//'
   # from https://stackoverflow.com/a/40371757/109305
   check-whitespace = !git diff-tree --check $(git hash-object -t tree /dev/null) HEAD
