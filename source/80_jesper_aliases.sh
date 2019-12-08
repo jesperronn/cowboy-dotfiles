@@ -12,10 +12,9 @@ alias k='kubectl'
 # tip from https://apple.stackexchange.com/a/260928/3403
 # and https://superuser.com/questions/649614/connect-using-anyconnect-from-command-line
 alias vpn='/opt/cisco/anyconnect/bin/vpn'
-alias vpndisconnect='/opt/cisco/anyconnect/bin/vpn disconnect'
-alias vpnconnect_karnov='/opt/cisco/anyconnect/bin/vpn connect vpn.karnovgroup.com/User -s < ~/.ssh/.credentials.karnov'
-alias vpnconnect_regionh='/opt/cisco/anyconnect/bin/vpn connect lev-vpn-fw.regionh.dk -s < ~/.ssh/.credentials.regionh'
-# printf 'USERNAME\nPASSWORD\n' | /opt/cisco/anyconnect/bin/vpn -s connect lev-vpn-fw.regionh.dk
+alias vpndisconnect='vpn disconnect'
+alias vpnconnect_karnov='vpn connect vpn.karnovgroup.com/User -s < ~/.ssh/.credentials.karnov'
+alias vpnconnect_regionh='vpn connect lev-vpn-fw.regionh.dk -s < ~/.ssh/.credentials.regionh'
 
 # EDITOR update for bundler
 export BUNDLER_EDITOR=atom
