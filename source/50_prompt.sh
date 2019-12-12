@@ -119,11 +119,11 @@ function __prompt_command() {
   PS1="\n"
   __prompt_vcs_info=()
   # git: [branch:flags]
-  __prompt_git || \
+  __prompt_git # || \
   # hg:  [branch:bookmark:flags]
-  __prompt_hg || \
+  # __prompt_hg || \
   # svn: [repo:lastchanged]
-  __prompt_svn
+  # __prompt_svn
   # Iterate over all vcs info parts, outputting an escaped var name that will
   # be interpolated automatically. This ensures that malicious branch names
   # can't execute arbitrary commands. For more info, see this PR:
@@ -138,7 +138,6 @@ function __prompt_command() {
     done
     PS1="$PS1$c1]$c9"
   fi
-
   # misc: [cmd#:hist#]
   # PS1="$PS1$c1[$c0#\#$c1:$c0!\!$c1]$c9"
   # path: [user@host:path]
