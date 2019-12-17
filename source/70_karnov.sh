@@ -14,7 +14,6 @@ alias cdk='cd ~/src/karnov'
 alias cda='cd ~/src/karnov/amp'
 
 # aliases for quick lint/transform via xml lib standard methods
-export KAR_CATALOG_PRJ=/home/marc/karnov/git/ns-karnovgroup-com
 export XML_CATALOG_PRJ=~/src/karnov/ns-karnovgroup-com
 alias karnov-catalog-ilse='XML_CATALOG_FILES=  xmlcatalog $XML_CATALOG_PRJ/ns.karnovgroup.com/catalog-ilse-variant-utf-8.xml'
 alias karnov-catalog-strict='XML_CATALOG_FILES=  xmlcatalog $XML_CATALOG_PRJ/ns.karnovgroup.com/catalog-utf-8.xml'

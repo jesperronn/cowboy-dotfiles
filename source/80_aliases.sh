@@ -3,8 +3,6 @@ alias more='more -r'
 
 alias pgrep='ps -ef | grep $1'
 
-alias gw='./gradlew'
-
 alias dcompose='docker-compose'
 
 #shows top 10 used terms from history
@@ -14,9 +12,6 @@ alias tophist="history | awk '{print \$4}' | awk 'BEGIN{FS=\"|\"}{print \$1}' | 
 # GPG requirement from https://help.github.com/articles/telling-git-about-your-gpg-key/
 # test if needed with `echo "test" | gpg --clearsign`
 export GPG_TTY=$(tty)
-
-# Homebrew cask install of firefox. To help test runners like Karma-firefox:
-export FIREFOX_BIN="/opt/homebrew-cask/Caskroom/firefox/latest/Firefox.app/Contents/MacOS/firefox-bin"
 
 # chrome shortcut
 # from https://developers.google.com/web/updates/2017/04/headless-chrome
