@@ -1,4 +1,4 @@
-eval "$(/Users/jesper/src/karnov/jin/bin/jin init -)"
+[[ -s "$HOME/src/karnov/jin/bin/jin" ]] && eval "$($HOME/src/karnov/jin/bin/jin init -)"
 
 
 #alias kk="K=$(cdk && pwd);echo $K;"
