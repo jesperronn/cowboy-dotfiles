@@ -61,9 +61,4 @@ export HOMEBREW_INSTALL_CLEANUP=true
 # and then set the token as: export HOMEBREW_GITHUB_API_TOKEN="your_new_token"
 # Github api for homebrew
 
-
- # bintray
- export BINTRAY_USERNAME=jesperronn
- export BINTRAY_KEY=
-
 # homebrew API token (for `brew search` and similar commands)
