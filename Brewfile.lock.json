@@ -638,7 +638,8 @@
         "bottle": false
       },
       "instantclienttap/instantclient/instantclient-basiclite": null,
-      "drone/drone/drone": null
+      "drone/drone/drone": null,
+      "instantclienttap/instantclient/instantclient-sdk": null
     },
     "cask": {
       "docker": {

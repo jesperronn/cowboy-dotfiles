@@ -46,4 +46,6 @@ cask 'sourcetree'
 
 # oracle instant client
 brew 'InstantClientTap/instantclient/instantclient-basiclite'
+brew 'InstantClientTap/instantclient/instantclient-sdk'
+# Drone.io
 brew 'drone/drone/drone'
