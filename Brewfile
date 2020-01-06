@@ -45,7 +45,7 @@ cask 'macvim'
 cask 'sourcetree'
 
 # oracle instant client
-brew 'InstantClientTap/instantclient/instantclient-basiclite'
-brew 'InstantClientTap/instantclient/instantclient-sdk'
+brew 'InstantClientTap/instantclient/instantclient-basiclite11'
+brew 'InstantClientTap/instantclient/instantclient-sdk11'
 # Drone.io
 brew 'drone/drone/drone'
