@@ -19,3 +19,4 @@
 # Don't commit tmux plugins, tpm will install them.
 /link/.tmux/plugins
 
+bin/cloud_sql_proxy
