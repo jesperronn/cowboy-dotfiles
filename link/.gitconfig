@@ -43,6 +43,8 @@
   lsh = log --pretty=\"%C(green)%h %C(blue)%<(7,trunc)%cr %C(cyan)%G? %C(magenta)%<(13,trunc)%an%C(reset)%C(normal)%<(60,trunc)% s%C(reset)%C(auto)%+d%C(reset)\" --abbrev-commit --decorate=short
   lsa = log --stat --graph --decorate --all
   lol = log --oneline --graph --decorate
+  logsince  = log --pretty='* %s' master..HEAD --reverse
+  logsinceh = log --pretty='%C(dim)%h%C(reset) %s' master..HEAD --reverse
   # stats shorcuts fra https://gist.github.com/hofmannsven/6814278
   stats        = log -10 --dirstat=files,1,cumulative --ignore-blank-lines --abbrev-commit --oneline --graph --decorate
   rebasesign   = rebase --exec 'git commit --amend --no-edit -n -S'
