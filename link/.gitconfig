@@ -48,6 +48,7 @@
   # stats shorcuts fra https://gist.github.com/hofmannsven/6814278
   stats        = log -10 --dirstat=files,1,cumulative --ignore-blank-lines --abbrev-commit --oneline --graph --decorate
   rebasesign   = rebase --exec 'git commit --amend --no-edit -n -S'
+  sign         = commit --amend --no-edit -S
   # clean/remove merged branches
   cleanbranches =  !git branch --merged master | grep -v master |xargs git branch -d
 
