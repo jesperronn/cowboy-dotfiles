@@ -30,3 +30,28 @@ if [ ! -f $DST ]; then
   "$DOTFILES/bin/setup/git-completion.sh"
 fi
 . $DST
+
+function _timestamp() {
+  date '+%Y%m%dT%H%M%S'
+}
+
+function _calc_backup_filename(){
+  set -o nounset
+  file=$1
+  ext="${file##*.}"
+  filename="${file%.*}"
+
+  echo "${filename}-$(_timestamp).${ext}"
+}
+
+function mv_date() {
+  set -o nounset
+  file=$1
+  mv -v "$file" "$(_calc_backup_filename "$file" )"
+}
+
+function cp_date() {
+  set -o nounset
+  file=$1
+  cp -v "$file" "$(_calc_backup_filename "$file" )"
+}
