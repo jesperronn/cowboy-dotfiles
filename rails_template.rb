@@ -2,7 +2,6 @@
 #
 # rails new . -m ~/.dotfiles/rails_template.rb
 
-gem 'attr_encrypted'
 gem 'devise'
 gem 'enumerize'
 gem 'pg'

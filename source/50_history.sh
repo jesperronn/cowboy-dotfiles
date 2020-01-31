@@ -13,6 +13,3 @@ export HISTTIMEFORMAT="[%F %T] "
 # Lots o' history.
 export HISTSIZE=15000
 export HISTFILESIZE=30000
-
-# Easily re-execute the last history command.
-alias r="fc -s"
