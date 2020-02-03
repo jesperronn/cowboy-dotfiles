@@ -36,8 +36,9 @@ function _timestamp() {
 }
 
 function _calc_backup_filename(){
-  set -o nounset
+  set -u
   file=$1
+  set +u
   ext="${file##*.}"
   filename="${file%.*}"
 
@@ -45,13 +46,15 @@ function _calc_backup_filename(){
 }
 
 function mv_date() {
-  set -o nounset
+  set -u
   file=$1
+  set +u
   mv -v "$file" "$(_calc_backup_filename "$file" )"
 }
 
 function cp_date() {
-  set -o nounset
+  set -u
   file=$1
+  set +u
   cp -v "$file" "$(_calc_backup_filename "$file" )"
 }
