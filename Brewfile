@@ -47,6 +47,7 @@ brew 'yarn-completion'
 
 # brew cask recipes
 cask 'docker'
+cask 'handbrake'
 cask 'macvim'
 cask 'sourcetree'
 
