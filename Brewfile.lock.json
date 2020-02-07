@@ -810,6 +810,15 @@
             "appdir": "/Applications"
           }
         }
+      },
+      "metaz": {
+        "version": "1.0.beta-49",
+        "options": {
+          "full_name": "metaz",
+          "args": {
+            "appdir": "/Applications"
+          }
+        }
       }
     }
   },

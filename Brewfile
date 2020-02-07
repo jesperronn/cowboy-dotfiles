@@ -49,6 +49,7 @@ brew 'yarn-completion'
 cask 'docker'
 cask 'handbrake'
 cask 'macvim'
+cask 'metaz'
 cask 'sourcetree'
 
 # oracle instant client
