@@ -51,6 +51,7 @@ cask 'handbrake'
 cask 'macvim'
 cask 'metaz'
 cask 'sourcetree'
+cask 'virtualbox'
 
 # oracle instant client
 brew 'InstantClientTap/instantclient/instantclient-basiclite11'
