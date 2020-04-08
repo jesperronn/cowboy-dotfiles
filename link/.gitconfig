@@ -31,7 +31,8 @@
   root         = rev-parse --show-toplevel
   cdroot       = !cd $(git root)
   sha          = rev-parse HEAD
-  taglist      = show-ref --tags --abbrev
+  #taglist      = show-ref --tags --abbrev
+  taglist      = tag --list --format '%(refname:short) %(objectname:short)'
   alias        = ! git config --get-regexp ^alias\\.
 
   # After a rebase, when you run it, it resets all of the commit dates to the author dates
@@ -86,7 +87,6 @@
         process = git-lfs filter-process
 [commit]
   gpgsign = false
-        template = ~/.stCommitMsg
 [gpg]
   program = gpg
 
