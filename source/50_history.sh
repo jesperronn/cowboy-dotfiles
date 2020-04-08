@@ -1,15 +1,22 @@
 # History settings
 
+#
+shopt -s histappend
 # Allow use to re-edit a faild history substitution.
 shopt -s histreedit
 # History expansions will be verified before execution.
 shopt -s histverify
 
-# Entries beginning with space aren't added into history, and duplicate
+# Commands below are documented in
+# https://www.gnu.org/software/bash/manual/html_node/Bash-Variables.html
+
 # entries will be erased (leaving the most recent entry).
-#export HISTCONTROL="ignorespace:erasedups"
+export HISTCONTROL="erasedups"
 # Give history timestamps.
 export HISTTIMEFORMAT="[%F %T] "
-# Lots o' history.
-export HISTSIZE=15000
-export HISTFILESIZE=30000
+
+#The maximum number of commands to remember on the history list.
+export HISTSIZE=100000
+
+# The maximum number of lines contained in the history file.
+export HISTFILESIZE=100000

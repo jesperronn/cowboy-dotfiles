@@ -1,3 +1,5 @@
+# shellcheck shell=bash
+
 [[ -s "$HOME/src/karnov/jin/bin/jin" ]] && eval "$($HOME/src/karnov/jin/bin/jin init -)"
 
 
@@ -11,14 +13,13 @@ alias j='jinborov'
 
 
 alias cdk='cd ~/src/karnov'
-alias cda='cd ~/src/karnov/amp'
 
 # aliases for quick lint/transform via xml lib standard methods
-export XML_CATALOG_PRJ="~/src/karnov/ns-karnovgroup-com"
-export XML_CATALOG_KAR="~/src/karnov/ns-karnovgroup-com/ns.karnovgroup.com/catalog-entities-only-utf-8.xml"
-export XML_CATALOG_FILES="~/src/karnov/ns-karnovgroup-com/ns.karnovgroup.com/catalog-entities-only-utf-8.xml"
-export XML_CATALOG_ILSE="~/src/karnov/ns-karnovgroup-com/ns.karnovgroup.com/catalog-ilse-variant-utf-8.xml"
-export XML_CATALOG_STRICT="~/src/karnov/ns-karnovgroup-com/ns.karnovgroup.com/catalog-utf-8.xml"
+export XML_CATALOG_PRJ="$HOME/src/karnov/ns-karnovgroup-com"
+export XML_CATALOG_KAR="$HOME/src/karnov/ns-karnovgroup-com/ns.karnovgroup.com/catalog-entities-only-utf-8.xml"
+export XML_CATALOG_FILES="$HOME/src/karnov/ns-karnovgroup-com/ns.karnovgroup.com/catalog-entities-only-utf-8.xml"
+export XML_CATALOG_ILSE="$HOME/src/karnov/ns-karnovgroup-com/ns.karnovgroup.com/catalog-ilse-variant-utf-8.xml"
+export XML_CATALOG_STRICT="$HOME/src/karnov/ns-karnovgroup-com/ns.karnovgroup.com/catalog-utf-8.xml"
 # default for all lib-xml, set default XML_CATALOG_FILES env variable:
 export XML_CATALOG_FILES="$XML_CATALOG_KAR"
 

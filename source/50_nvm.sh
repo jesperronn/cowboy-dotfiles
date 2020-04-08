@@ -1,3 +1,5 @@
+# shellcheck shell=bash
+
 export NVM_DIR=~/.nvm
 # nvm shell performance fix
 nvm()

@@ -1,3 +1,5 @@
+# shellcheck shell=bash
+
 paths=(
   ~/.local/bin
   $DOTFILES/bin

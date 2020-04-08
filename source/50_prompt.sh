@@ -1,3 +1,5 @@
+# shellcheck shell=bash
+
 # My awesome bash prompt
 #
 # Copyright (c) 2012 "Cowboy" Ben Alman

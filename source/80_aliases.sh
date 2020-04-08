@@ -1,3 +1,5 @@
+# shellcheck shell=bash
+
 alias less='less -r'
 alias more='more -r'
 

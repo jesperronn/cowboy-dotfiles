@@ -1,6 +1,4 @@
-alias cdv='cd ~/src/cancerventetid'
-alias cdp='cd ~/src/nine/pplus/plus-reporter'
-alias cdn='cd ~/src/nine'
+# shellcheck shell=bash
 
 alias k='kubectl'
 

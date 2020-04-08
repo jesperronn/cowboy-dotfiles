@@ -1,3 +1,5 @@
+# shellcheck shell=bash
+
 # append the following lines to bash_profile:
 
 LESSPIPE=`which src-hilite-lesspipe.sh`
