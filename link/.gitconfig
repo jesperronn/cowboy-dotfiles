@@ -136,3 +136,5 @@
 # images require `brew install exiftool`
 [diff "image"]
   textconv = exiftool
+[pull]
+	ff = only
