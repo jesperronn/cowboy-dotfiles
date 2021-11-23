@@ -54,7 +54,8 @@
   rebasesign   = rebase --exec 'git commit --amend --no-edit -n -S'
   sign         = commit --amend --no-edit -S
   # clean/remove merged branches
-  cleanbranches =  !git branch --merged master | grep -v master |xargs git branch -d
+  cleanbranches = !git branch --merged master | grep -v master |xargs git branch -d
+  gone          = !git branch -v | grep gone | awk '{print $1}'
 
   # check-whitespace usage:
   # git check-whitespace | grep trailing | cut -d: -f1 | uniq -u -z | xargs -0 sed --in-place -e 's/[ \t]+$//'
