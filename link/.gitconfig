@@ -2,7 +2,11 @@
   # These values are set in ~/.gitconfig_local
   # see https://stackoverflow.com/a/42571751/109305
 [include]
-  path = ./.gitconfig_local
+  path = ~/.gitconfig_local
+[includeif "gitdir/i:~/src/stil/"]
+  path = ~/.gitconfig_nine
+[includeif "gitdir/i:~/src/atp/"]
+  path = ~/.gitconfig_nine
 [core]
   autocrlf     = input
   whitespace   = fix,space-before-tab,tab-in-indent,trailing-space
@@ -47,8 +51,8 @@
   lsh = log --pretty=\"%C(green)%h %C(blue)%<(7,trunc)%cr %C(cyan)%G? %C(magenta)%<(13,trunc)%an%C(reset)%C(normal)%<(60,trunc)% s%C(reset)%C(auto)%+d%C(reset)\" --abbrev-commit --decorate=short
   lsa = log --stat --graph --decorate --all
   lol = log --oneline --graph --decorate
-  logsince  = log --pretty='* %s' master..HEAD --reverse
-  logsinceh = log --pretty='%C(dim)%h%C(reset) %s' master..HEAD --reverse
+  logsince  = log --pretty='* %s' --reverse
+  logsinceh = log --pretty='%C(dim)%h%C(reset) %s' --reverse
   # stats shorcuts fra https://gist.github.com/hofmannsven/6814278
   stats        = log -10 --dirstat=files,1,cumulative --ignore-blank-lines --abbrev-commit --oneline --graph --decorate
   rebasesign   = rebase --exec 'git commit --amend --no-edit -n -S'
@@ -124,14 +128,6 @@
 
 [diff "odf"]
   textconv = odt2txt
-[diff "pdf"]
-  textconv = pdfinfo
-[diff "excel"]
-  textconv = unzip -c -a
-  textconv = unzip -c
-  textconv = unzip -c -aa
-  textconv = unzip -c ---a
-  binary = true
 
 
 [diff "bin"]
