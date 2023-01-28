@@ -27,6 +27,9 @@ function dotfiles() {
   $DOTFILES/bin/dotfiles "$@" && src
 }
 
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+
 src
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
