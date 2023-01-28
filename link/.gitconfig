@@ -141,4 +141,4 @@
 [pull]
 	ff = only
 [blame]
-	ignoreRevsFile = .git-blame-ignore-revs
+    # ignoreRevsFile = .git-blame-ignore-revs
