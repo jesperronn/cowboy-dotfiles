@@ -3,7 +3,6 @@
 # Editing
 
 export EDITOR=vim
-export BETTER_ERRORS_EDITOR=atom
 
 if [[ ! "$SSH_TTY" ]] && is_osx; then
   [[ ! "$TMUX" ]] && EDITOR=mvim

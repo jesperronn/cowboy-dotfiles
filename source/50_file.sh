@@ -22,11 +22,6 @@ else
   alias lsd='CLICOLOR_FORCE=1 ll | grep --color=never "^d"'
 fi
 
-# Easier navigation: .., ..., -
-alias ..='cd ..'
-alias ...='cd ../..'
-alias -- -='cd -'
-
 # File size
 alias fs="stat -f '%z bytes'"
 alias df="df -h"

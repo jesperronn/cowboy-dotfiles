@@ -10,6 +10,3 @@ is_osx || return 1
 
 # Make 'less' more.
 [[ "$(type -P lesspipe.sh)" ]] && eval "$(lesspipe.sh)"
-
-# Start ScreenSaver. This will lock the screen if locking is enabled.
-alias ss="open /System/Library/Frameworks/ScreenSaver.framework/Versions/A/Resources/ScreenSaverEngine.app"
