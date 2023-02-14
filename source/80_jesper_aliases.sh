@@ -11,11 +11,7 @@ alias k='kubectl'
 # and https://superuser.com/questions/649614/connect-using-anyconnect-from-command-line
 alias vpn='/opt/cisco/anyconnect/bin/vpn'
 alias vpndisconnect='vpn disconnect'
-# alias vpnconnect_karnov='vpn connect vpn.karnovgroup.com/User -s < ~/.ssh/.credentials.karnov'
 alias vpnconnect_regionh='vpn connect lev-vpn-fw.regionh.dk -s < ~/.ssh/.credentials.regionh'
-
-# EDITOR update for bundler
-export BUNDLER_EDITOR=atom
 
 # lang settings, view with `locale` or `locale -a`
 # export LANG=da_DK.UTF-8
