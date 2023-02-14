@@ -37,7 +37,7 @@
   sha          = rev-parse HEAD
   #taglist     = show-ref --tags --abbrev
   #taglist     = tag --list --format '%(refname:short) %(objectname:short)'
-  taglist      = for-each-ref --sort 'authordate' --format '%(align:25,left)%(refname:short)%(end) %(objectname:short) %09%(authordate:short)' refs/tags
+  taglist      = for-each-ref --sort 'taggerdate' --format '%(align:25,left)%(refname:short)%(end) %(objectname:short) %09%(taggerdate:short)%09%(authordate:short)' refs/tags
   branchlist   = git for-each-ref --format '%(align:25,left)%(refname:short)%(end) %(objectname:short) %09 %(authordate:short) (%(authorname))' refs/remotes
   sortsize     = ! git ls-tree -r --long HEAD | sort --key 4 --numeric-sort
   alias        = ! git config --get-regexp ^alias\\.
