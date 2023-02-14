@@ -6,6 +6,7 @@ alias more='more -r'
 alias pgrep='ps -ef | grep $1'
 
 alias dcompose='docker-compose'
+alias dcheck='/Applications/Docker.app/Contents/MacOS/com.docker.diagnose check'
 
 #shows top 10 used terms from history
 #from http://stackoverflow.com/questions/68372/what-is-your-single-most-favorite-command-line-trick-using-bash#68390
