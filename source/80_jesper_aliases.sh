@@ -5,11 +5,11 @@ alias k='kubectl'
 
 # Cisco vpn credentials can be fired from command line. copy this file
 # and use it like this:
-# /opt/cisco/anyconnect/bin/vpn connect lev-vpn-fw.regionh.dk -s < ~.ssh/.credentials.regionh
+# /opt/cisco/secureclient/bin/vpn connect lev-vpn-fw.regionh.dk -s < ~.ssh/.credentials.regionh
 #
 # tip from https://apple.stackexchange.com/a/260928/3403
 # and https://superuser.com/questions/649614/connect-using-anyconnect-from-command-line
-alias vpn='/opt/cisco/anyconnect/bin/vpn'
+alias vpn='/opt/cisco/secureclient/bin/vpn'
 alias vpndisconnect='vpn disconnect'
 alias vpnconnect_regionh='vpn connect lev-vpn-fw.regionh.dk -s < ~/.ssh/.credentials.regionh'
 

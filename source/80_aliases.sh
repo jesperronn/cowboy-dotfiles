@@ -4,8 +4,9 @@ alias less='less -r'
 alias more='more -r'
 
 alias pgrep='ps -ef | grep $1'
+alias pse='ps -e -o pid,command'
 
-alias dcompose='docker-compose'
+alias dcompose='docker compose'
 alias dcheck='/Applications/Docker.app/Contents/MacOS/com.docker.diagnose check'
 
 #shows top 10 used terms from history
