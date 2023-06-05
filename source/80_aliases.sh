@@ -19,8 +19,6 @@ export GPG_TTY=$(tty)
 # chrome shortcut
 # from https://developers.google.com/web/updates/2017/04/headless-chrome
 alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
-alias chrome-canary="/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary"
-alias chromium="/Applications/Chromium.app/Contents/MacOS/Chromium"
 
 # avoid Chromium asking for Firewall permissions on every launch of Puppeteer in Catalina
 # tip from https://github.com/puppeteer/puppeteer/issues/4752#issuecomment-586599843

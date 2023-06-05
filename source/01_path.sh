@@ -3,6 +3,7 @@
 paths=(
   ~/.local/bin
   $DOTFILES/bin
+  "/Applications/IntelliJ IDEA.app/Contents/MacOS"
 )
 
 export PATH
