@@ -1,3 +1,5 @@
+# shellcheck shell=bash
+
 # Where the magic happens.
 export DOTFILES=~/.dotfiles
 
@@ -8,7 +10,7 @@ function src() {
     source "$DOTFILES/source/$1.sh"
   else
     for file in $DOTFILES/source/*.sh; do
-      # timings for load of start scripts:
+      # timings for load of start script performance:
       # $ __bashrc_bench=1 bash -i
       if [[ $__bashrc_bench ]]; then
         TIMEFORMAT="$file: %R"
