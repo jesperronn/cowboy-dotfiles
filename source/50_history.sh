@@ -16,7 +16,7 @@ export HISTCONTROL="erasedups"
 export HISTTIMEFORMAT="[%F %T] "
 
 #The maximum number of commands to remember on the history list.
-export HISTSIZE=100000
+export HISTSIZE=130000
 
 # The maximum number of lines contained in the history file.
-export HISTFILESIZE=100000
+export HISTFILESIZE=130000
