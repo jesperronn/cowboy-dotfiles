@@ -59,7 +59,7 @@
   # clean/remove merged branches
   cleanbranches = !git branch --merged master | grep -v master |xargs git branch -d
   gone          = !git branch -v | grep gone | awk '{print $1}'
-  fetchall      = !find . -type d -maxdepth 1 -mindepth 1 | parallel -v "git -C {} fetch --tags -f --all"
+  fetchall      = !find . -type d -maxdepth 1 -mindepth 1 | parallel \"test -d {}/.git && echo {} && git -C {} fetch --tags -f --all\"
 
   # check-whitespace usage:
   # git check-whitespace | grep trailing | cut -d: -f1 | uniq -u -z | xargs -0 sed --in-place -e 's/[ \t]+$//'
