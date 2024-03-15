@@ -81,7 +81,6 @@ brew "zlib"
 brew "mysql-client", link: true
 brew "nmap"
 brew "nss"
-brew "nvm"
 brew "odt2txt"
 brew "openssl@1.1"
 brew "p7zip"
