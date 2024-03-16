@@ -502,7 +502,7 @@ shopt -s dotglob
 shopt -s nullglob
 
 # Create caches dir and init subdir, if they don't already exist.
-mkdir -p "$DOTFILES/caches/init"
+mkdir -p "$DOTFILES/caches/init" "$HOME/.config"
 
 # If backups are needed, this is where they'll go.
 backup_dir="$DOTFILES/backups/$(date "+%Y_%m_%d-%H_%M_%S")/"
