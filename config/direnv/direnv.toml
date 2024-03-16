@@ -6,7 +6,6 @@
 # If both .envrc and .env files exist, the .envrc will always be chosen first.
 load_dotenv = true
 
-
 # If set to true, the .envrc will be loaded with set -euo pipefail.
 # This option will be the default in the future.
 strict_env = true
