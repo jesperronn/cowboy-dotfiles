@@ -1,10 +1,10 @@
+#!/usr/bin/env bash
 # Exit if pip is not installed.
 [[ ! "$(type -P pip)" ]] && e_error "Pip needs to be installed." && return 1
 
 # Add pip packages
 pip_packages=(
   netifaces
-  # powerline-status
 )
 
 installed_pip_packages="$(pip list 2>/dev/null | awk '{print $1}')"

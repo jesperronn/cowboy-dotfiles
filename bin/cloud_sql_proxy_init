@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-cd "$(dirname "$0")" || exit 1
-TARGET_NAME="cloud_sql_proxy"
-
-
-curl -s -o $TARGET_NAME https://dl.google.com/cloudsql/cloud_sql_proxy.darwin.amd64
-chmod +x $TARGET_NAME
