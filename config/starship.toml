@@ -12,6 +12,10 @@ $character"""
 
 [directory]
 style = "blue"
+before_repo_root_style = "cyan"
+repo_root_style = "bold blue"
+truncation_length = 0
+truncate_to_repo = false
 
 [cmd_duration]
 format = "[$duration]($style) "
