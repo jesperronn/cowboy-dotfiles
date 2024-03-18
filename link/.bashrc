@@ -10,7 +10,7 @@ function src() {
     source "$DOTFILES/source/$1.sh"
   else
     for file in $DOTFILES/source/*.sh; do
-      # timings for load of start script performance/benchmark -- use __bachrc_bench=1:
+      # timings for load of start script performance/benchmark -- use __bashrc_bench=1:
       # $ __bashrc_bench=1 bash -i
       if [[ $__bashrc_bench ]]; then
         TIMEFORMAT="$file: %R"
@@ -19,7 +19,6 @@ function src() {
       else
         . "$file"
       fi
-
     done
   fi
 }
@@ -33,5 +32,3 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 
 
 src
-
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
