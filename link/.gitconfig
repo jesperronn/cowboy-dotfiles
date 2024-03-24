@@ -141,3 +141,5 @@
 	ff = only
 [blame]
     # ignoreRevsFile = .git-blame-ignore-revs
+[init]
+        defaultBranch = main
