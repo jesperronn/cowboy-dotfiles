@@ -7,7 +7,7 @@ $git_state\
 $git_status\
 $cmd_duration\
 $line_break\
-$python\
+$status\
 $character"""
 
 [directory]
@@ -20,6 +20,14 @@ truncate_to_repo = false
 [cmd_duration]
 format = "[$duration]($style) "
 style = "yellow"
+
+[git_status]
+stashed = ""
+style = 'red'
+
+[status]
+disabled = false
+symbol = "🤔 "
 
 [python]
 format = "[$virtualenv]($style) "
