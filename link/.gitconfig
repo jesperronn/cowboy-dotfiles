@@ -46,10 +46,8 @@
 
   # available short color formats:  normal, black, red, green, yellow, blue, magenta, cyan and white. First color: foreground; Second: background.
   ls  = log --pretty=\"%C(green)%h %C(blue)%<(7,trunc)%cr %C(cyan)%G? %C(magenta)%<(13,trunc)%an%C(reset)%C(normal)%<(80,trunc)% s%C(blue)% ai%C(reset)%C(auto)%+d%C(reset)\" --abbrev-commit --decorate=short
-  lsh = log --pretty=\"%C(green)%h %C(blue)%<(7,trunc)%cr %C(cyan)%G? %C(magenta)%<(13,trunc)%an%C(reset)%C(normal)%<(60,trunc)% s%C(reset)%C(auto)%+d%C(reset)\" --abbrev-commit --decorate=short
-  lsm = ls master..head
+  lsh = log --pretty=\"%C(green)%h %C(blue)%<(25)%ai %C(cyan)%G? %C(magenta)%<(13,trunc)%an%C(reset)%C(normal)%<(60,trunc)% s%C(reset)%C(auto)%+d%C(reset)\" --abbrev-commit --decorate=short
   lsa = ls --stat --graph --all
-  lol = log --oneline --graph --decorate
   logsince  = log --pretty='* %s' --reverse
   logsinceh = log --pretty='%C(dim)%h%C(reset) %s' --reverse
   # stats shorcuts fra https://gist.github.com/hofmannsven/6814278
@@ -65,6 +63,7 @@
   # git check-whitespace | grep trailing | cut -d: -f1 | uniq -u -z | xargs -0 sed --in-place -e 's/[ \t]+$//'
   # from https://stackoverflow.com/a/40371757/109305
   check-whitespace = !git diff-tree --check $(git hash-object -t tree /dev/null) HEAD
+        staash = stash --all
 
 [fetch]
   recursesubmodules = true
