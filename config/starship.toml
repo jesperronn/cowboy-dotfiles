@@ -21,9 +21,22 @@ truncate_to_repo = false
 format = "[$duration]($style) "
 style = "yellow"
 
+[git_commit]
+tag_disabled = false
+
+[git_metrics]
+disabled = false
+format = '[+$added]($added_style)/[-$deleted]($deleted_style) '
+
+
 [git_status]
-stashed = ""
 style = 'red'
+deleted = ""
+modified = ""
+renamed = ""
+staged = ""
+stashed = ""
+untracked = ""
 
 [status]
 disabled = false
