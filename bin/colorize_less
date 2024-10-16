@@ -10,7 +10,7 @@
 #   -h, --help    Show this help message and exit.
 #
 # Example:
-#   cat file.txt | ./colorize_less.sh | less -R
+#   cat file.txt | ./colorize_less | less -R
 #
 # Dependencies:
 #   - `less` command must be installed on the system.
@@ -24,6 +24,7 @@
 
 # Define color codes (using ANSI escape codes -- \e is the same as \033 but \e didnt work in some terminals)
 C_0="\033[0m"
+C_BOLD="\033[1m"
 C_RED="\033[31m"
 C_ORANGE="\033[38;5;202m"
 C_BLUE="\033[34m"
@@ -34,8 +35,9 @@ C_DIM="\033[37m"
 
 # Colorize the log lines
 colorize() {
-  awk -v red="$C_RED" -v orange="$C_ORANGE" -v blue="$C_BLUE" -v cyan="$C_CYAN" -v dim="$C_DIM" -v reset="$C_0" '
-  /FATAL/ {print red $0 reset; next}
+  awk -v red="$C_RED" -v orange="$C_ORANGE" -v blue="$C_BLUE" -v cyan="$C_CYAN" -v dim="$C_DIM" -v bold="$C_BOLD" -v reset="$C_0" '
+  /FATAL/ {print bold red $0 reset; next}
+  /ERROR/ {print red $0 reset; next}
   /WARN/ {print orange $0 reset; next}
   /INFO/ {print blue $0 reset; next}
   /DEBUG/ {print dim $0 reset; next}
