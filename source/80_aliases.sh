@@ -1,8 +1,5 @@
 # shellcheck shell=bash
 
-alias less='less -r'
-alias more='more -r'
-
 alias pgrep='ps -ef | grep $1'
 alias pse='ps -e -o pid,command'
 
