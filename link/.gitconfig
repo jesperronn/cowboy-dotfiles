@@ -30,8 +30,6 @@
   co           = checkout
   br           = branch
   brs          = branch --sort committerdate
-  cp           = cherry-pick
-  g            = grep --break --heading --line-number
   root         = rev-parse --show-toplevel
   cdroot       = !cd $(git root)
   sha          = rev-parse HEAD
@@ -47,7 +45,6 @@
   # available short color formats:  normal, black, red, green, yellow, blue, magenta, cyan and white. First color: foreground; Second: background.
   ls  = log --pretty=\"%C(green)%h %C(blue)%<(7,trunc)%cr %C(cyan)%G? %C(magenta)%<(13,trunc)%an%C(reset)%C(normal)%<(80,trunc)% s%C(blue)% ai%C(reset)%C(auto)%+d%C(reset)\" --abbrev-commit --decorate=short
   lsh = log --pretty=\"%C(green)%h %C(blue)%<(25)%ai %C(cyan)%G? %C(magenta)%<(13,trunc)%an%C(reset)%C(normal)%<(60,trunc)% s%C(reset)%C(auto)%+d%C(reset)\" --abbrev-commit --decorate=short
-  lsa = ls --stat --graph --all
   logsince  = log --pretty='* %s' --reverse
   logsinceh = log --pretty='%C(dim)%h%C(reset) %s' --reverse
   # stats shorcuts fra https://gist.github.com/hofmannsven/6814278
@@ -55,7 +52,6 @@
   rebasesign   = rebase --exec 'git commit --amend --no-edit -n -S'
   sign         = commit --amend --no-edit -S
   # clean/remove merged branches
-  cleanbranches = !git branch --merged master | grep -v master |xargs git branch -d
   gone          = !git branch -v | grep gone | awk '{print $1}'
   fetchall      = !find . -type d -maxdepth 1 -mindepth 1 | parallel \"test -d {}/.git && echo {} && git -C {} fetch --tags -f --all\"
 
@@ -63,7 +59,6 @@
   # git check-whitespace | grep trailing | cut -d: -f1 | uniq -u -z | xargs -0 sed --in-place -e 's/[ \t]+$//'
   # from https://stackoverflow.com/a/40371757/109305
   check-whitespace = !git diff-tree --check $(git hash-object -t tree /dev/null) HEAD
-        staash = stash --all
 
 [fetch]
   recursesubmodules = true
