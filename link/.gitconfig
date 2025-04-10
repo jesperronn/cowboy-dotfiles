@@ -43,8 +43,8 @@
   redate = rebase --committer-date-is-author-date
 
   # available short color formats:  normal, black, red, green, yellow, blue, magenta, cyan and white. First color: foreground; Second: background.
-  ls  = log --pretty=\"%C(green)%h %C(blue)%<(7,trunc)%cr %C(cyan)%G? %C(magenta)%<(13,trunc)%an%C(reset)%C(normal)%<(80,trunc)% s%C(blue)% ai%C(reset)%C(auto)%+d%C(reset)\" --abbrev-commit --decorate=short
-  lsh = log --pretty=\"%C(green)%h %C(blue)%<(25)%ai %C(cyan)%G? %C(magenta)%<(13,trunc)%an%C(reset)%C(normal)%<(60,trunc)% s%C(reset)%C(auto)%+d%C(reset)\" --abbrev-commit --decorate=short
+  ls  = log --pretty=\"%C(green)%h %C(cyan)%<(7,trunc)%cr%C(reset)%C(magenta)%C(bold)%<|(-44,trunc)% s%C(reset)%C(cyan)%C(dim)%<(13,trunc)% aN%C(blue)% G? %>|(-1)% ai%C(reset)%C(auto)%+d%C(reset)\" --abbrev-commit --decorate=short
+  lss = log --pretty=\"%C(green)%h %C(cyan)%<(7,trunc)%cr%C(reset)%C(magenta)%C(bold)%<|(-44,trunc)% s%C(reset)%C(cyan)%C(dim)%<(13,trunc)% aN%C(blue)% G? %>|(-1)% ai%C(reset)%C(auto)%+d%C(reset) %C(red)%+b%C(reset)\" --abbrev-commit --decorate=short
   logsince  = log --pretty='* %s' --reverse
   logsinceh = log --pretty='%C(dim)%h%C(reset) %s' --reverse
   # stats shorcuts fra https://gist.github.com/hofmannsven/6814278
@@ -74,8 +74,8 @@
   default      = current
 	autoSetupRemote = true
 [rebase]
-  autoSquash   = true
-  autoStash    = true
+	autosquash = true
+	autostash = true
 [rerere]
   enable       = true
 [remote "origin"]
