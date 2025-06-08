@@ -32,12 +32,12 @@ MULTILINE_COMMIT_MSG=""
 DIRTY_HANDLING="skip"
 
 show_help() {
-  cat << 'EOF'
+  cat << EOF
 Multi-Directory Git Commit Script
 
 USAGE:
-  script.sh [OPTIONS] [CONFIG_FILE]
-  script.sh --source-path PATH --file-names FILE1,FILE2 --target-paths PATH1,PATH2 --branch-name BRANCH --commit-msg MSG
+  $0 [OPTIONS] [CONFIG_FILE]
+  $0 --source-path PATH --file-names FILE1,FILE2 --target-paths PATH1,PATH2 --branch-name BRANCH --commit-msg MSG
 
 DESCRIPTION:
   Repeats git commits across multiple directories. For each target directory:
@@ -82,20 +82,20 @@ CONFIG FILE FORMAT:
 
 EXAMPLES:
   # Generate config from last commit
-  script.sh --create-config
+  $0 --create-config
 
   # Using config file
-  script.sh multi-commit.conf
+  $0 multi-commit.conf
 
   # Using command line arguments
-  script.sh --source-path /home/user/source \
+  $0 --source-path /home/user/source \
             --file-names config.yml,README.md \
             --target-paths /home/user/project1,/home/user/project2 \
             --branch-name update-configs \
             --commit-msg "Update configuration files"
 
   # Handle dirty repos by stashing
-  script.sh --dirty-handling stash multi-commit.conf
+  $0 --dirty-handling stash multi-commit.conf
 
 EOF
 }
