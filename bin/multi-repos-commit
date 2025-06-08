@@ -54,6 +54,7 @@ OPTIONS:
   -m, --commit-msg MSG          Commit message (can be multiline)
   -d, --dirty-handling STRATEGY How to handle dirty repositories
   -c, --config FILE             Config file path (default: look for script.conf)
+      --create-config           Generate config file from last commit in current repo
 
 DIRTY HANDLING STRATEGIES:
   skip          Skip dirty repositories, continue with clean ones (default)
@@ -76,11 +77,15 @@ CONFIG FILE FORMAT:
   
   This commit updates the configuration files
   across multiple repositories for consistency."
+  # DIRTY_HANDLING can be one of: skip, fail, stash, include-dirty
   DIRTY_HANDLING="skip"
 
 EXAMPLES:
+  # Generate config from last commit
+  script.sh --create-config
+
   # Using config file
-  script.sh config.conf
+  script.sh multi-commit.conf
 
   # Using command line arguments
   script.sh --source-path /home/user/source \
@@ -90,9 +95,119 @@ EXAMPLES:
             --commit-msg "Update configuration files"
 
   # Handle dirty repos by stashing
-  script.sh --dirty-handling stash config.conf
+  script.sh --dirty-handling stash multi-commit.conf
 
 EOF
+}
+
+get_next_config_filename() {
+  local base_name="multi-commit"
+  local extension=".conf"
+  local counter=1
+  
+  # Check if base name exists
+  if [[ ! -f "${base_name}${extension}" ]]; then
+    echo "${base_name}${extension}"
+    return
+  fi
+  
+  # Find next available numbered filename
+  while [[ -f "${base_name}${counter}${extension}" ]]; do
+    counter=$((counter + 1))
+  done
+  
+  echo "${base_name}${counter}${extension}"
+}
+
+create_config_from_last_commit() {
+  # Check if we're in a git repository
+  if ! git rev-parse --git-dir >/dev/null 2>&1; then
+    echo "Error: Not in a git repository" >&2
+    exit 1
+  fi
+  
+  # Check if there are any commits
+  if ! git rev-parse HEAD >/dev/null 2>&1; then
+    echo "Error: No commits found in repository" >&2
+    exit 1
+  fi
+  
+  echo "🔍 Analyzing last commit..."
+  
+  # Get current directory as source path
+  local source_path
+  source_path=$(pwd)
+  
+  # Get files changed in last commit
+  local changed_files
+  mapfile -t changed_files < <(git diff-tree --no-commit-id --name-only -r HEAD)
+  
+  if [[ ${#changed_files[@]} -eq 0 ]]; then
+    echo "Error: No files changed in last commit" >&2
+    exit 1
+  fi
+  
+  # Get current branch name for new branch suggestion
+  local current_branch
+  current_branch=$(git branch --show-current)
+  local suggested_branch="${current_branch}-sync"
+  
+  # Get commit message from last commit
+  local commit_msg
+  commit_msg=$(git log -1 --pretty=format:"%B")
+  
+  # Get next available config filename
+  local config_file
+  config_file=$(get_next_config_filename)
+  
+  echo "📝 Creating config file: $config_file"
+  
+  # Create config file
+  cat > "$config_file" << EOF
+# Configuration generated from last commit
+# $(git log -1 --pretty=format:"%h - %s (%an, %ar)")
+
+SOURCE_PATH="$source_path"
+
+FILE_NAMES=(
+EOF
+  
+  # Add each changed file
+  for file in "${changed_files[@]}"; do
+    echo "  $file" >> "$config_file"
+  done
+  
+  cat >> "$config_file" << EOF
+)
+
+# Add your target repository paths here
+TARGET_PATHS=(
+  # /path/to/target/repo1
+  # /path/to/target/repo2
+)
+
+BRANCH_NAME="$suggested_branch"
+
+MULTILINE_COMMIT_MSG="$commit_msg"
+
+DIRTY_HANDLING="skip"
+EOF
+  
+  echo "✅ Config file created: $config_file"
+  echo
+  echo "📋 Summary:"
+  echo "  Source path: $source_path"
+  echo "  Files (${#changed_files[@]}):"
+  for file in "${changed_files[@]}"; do
+    echo "    - $file"
+  done
+  echo "  Suggested branch: $suggested_branch"
+  echo "  Commit message: ${commit_msg:0:50}$([ ${#commit_msg} -gt 50 ] && echo "...")"
+  echo
+  echo "📝 Next steps:"
+  echo "  1. Edit $config_file and add your TARGET_PATHS"
+  echo "  2. Adjust BRANCH_NAME and commit message if needed"
+  echo "  3. Run: $0 $config_file"
 }
 
 parse_config_file() {
@@ -202,8 +317,8 @@ parse_args() {
   local config_file=""
   
   # Look for default config file
-  if [[ -f "script.conf" ]]; then
-    config_file="script.conf"
+  if [[ -f "multi-commit.conf" ]]; then
+    config_file="multi-commit.conf"
   fi
   
   # Parse command line arguments
@@ -211,6 +326,10 @@ parse_args() {
     case $1 in
       -h|--help)
         show_help
+        exit 0
+        ;;
+      --create-config)
+        create_config_from_last_commit
         exit 0
         ;;
       -s|--source-path)
