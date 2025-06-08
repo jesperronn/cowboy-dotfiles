@@ -31,6 +31,7 @@ BRANCH_NAME=""
 MULTILINE_COMMIT_MSG=""
 DIRTY_HANDLING="skip"
 DRY_RUN=false
+SKIP_PUSH=false
 
 # Get script name without path
 SCRIPT_NAME=$(basename "$0")
@@ -47,7 +48,7 @@ DESCRIPTION:
   Repeats git commits across multiple directories. For each target directory:
   1. Checks if files already match (skips if so)
   2. Handles dirty repositories according to strategy
-  3. Creates branch, copies files, commits, and pushes
+  3. Creates branch, copies files, commits, and optionally pushes
 
 OPTIONS:
   -h, --help                    Show this help message
@@ -60,6 +61,7 @@ OPTIONS:
   -c, --config FILE             Config file path (default: look for script.conf)
       --create-config           Generate config file from last commit in current repo
       --dry-run                 Show what would be done without making changes
+      --skip-push               Skip pushing to remote (commit locally only)
 
 DIRTY HANDLING STRATEGIES:
   skip          Skip dirty repositories, continue with clean ones (default)
@@ -84,6 +86,8 @@ CONFIG FILE FORMAT:
   across multiple repositories for consistency."
   # DIRTY_HANDLING can be one of: skip, fail, stash, include-dirty
   DIRTY_HANDLING="skip"
+  # SKIP_PUSH can be true or false
+  SKIP_PUSH=false
 
 EXAMPLES:
   # Generate config from last commit
@@ -101,6 +105,9 @@ EXAMPLES:
 
   # Handle dirty repos by stashing
   $SCRIPT_NAME --dirty-handling stash multi-commit.conf
+
+  # Commit locally without pushing
+  $SCRIPT_NAME --skip-push multi-commit.conf
 
 EOF
 }
@@ -197,6 +204,9 @@ MULTILINE_COMMIT_MSG="$commit_msg"
 
 # Dirty handling options: skip, fail, stash, include-dirty
 DIRTY_HANDLING="skip"
+
+# Skip pushing to remote (commit locally only)
+SKIP_PUSH=false
 EOF
 
   echo "✅ Config file created: $config_file"
@@ -344,6 +354,10 @@ parse_args() {
         DRY_RUN=true
         shift
         ;;
+      --skip-push)
+        SKIP_PUSH=true
+        shift
+        ;;
       -s|--source-path)
         SOURCE_PATH="$2"
         shift 2
@@ -467,6 +481,7 @@ show_dry_run_intentions() {
   echo "💬 Commit message:"
   echo "$MULTILINE_COMMIT_MSG" | sed 's/^/    /'
   echo "🔧 Dirty handling: $DIRTY_HANDLING"
+  echo "📤 Skip push: $SKIP_PUSH"
   echo
   echo "🎯 Target repositories (${#TARGET_PATHS[@]}):"
 
@@ -512,7 +527,11 @@ show_dry_run_intentions() {
 
     echo "    → Would create branch '$BRANCH_NAME'"
     echo "    → Would copy and commit files"
-    echo "    → Would push to origin"
+    if [[ "$SKIP_PUSH" == "true" ]]; then
+      echo "    → Would skip push (--skip-push enabled)"
+    else
+      echo "    → Would push to origin"
+    fi
     would_process=$((would_process + 1))
   done
 
@@ -645,8 +664,13 @@ repeated_command() {
   # Commit changes
   git commit -m "$MULTILINE_COMMIT_MSG"
 
-  echo "  🚀 Pushing branch '$BRANCH_NAME'"
-  git push -u origin "$BRANCH_NAME"
+  # Push to remote unless --skip-push is enabled
+  if [[ "$SKIP_PUSH" == "true" ]]; then
+    echo "  📋 Skipping push (--skip-push enabled)"
+  else
+    echo "  🚀 Pushing branch '$BRANCH_NAME'"
+    git push -u origin "$BRANCH_NAME"
+  fi
 
   popd > /dev/null
 }
