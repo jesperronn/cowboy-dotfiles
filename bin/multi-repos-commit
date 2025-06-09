@@ -23,7 +23,7 @@
 
 set -euo pipefail
 
-# Global variables
+#=== GLOBAL VARIABLES ===#
 SOURCE_PATH=""
 FILE_NAMES=()
 TARGET_PATHS=()
@@ -32,10 +32,9 @@ MULTILINE_COMMIT_MSG=""
 DIRTY_HANDLING="skip"
 DRY_RUN=false
 SKIP_PUSH=false
-
-# Get script name without path
 SCRIPT_NAME=$(basename "$0")
 
+#=== HELP AND USAGE ===#
 show_help() {
   cat << EOF
 Multi-Directory Git Commit Script
@@ -112,6 +111,7 @@ EXAMPLES:
 EOF
 }
 
+#=== CONFIG GENERATION ===#
 get_next_config_filename() {
   local base_name="multi-commit"
   local extension=".conf"
@@ -131,7 +131,7 @@ get_next_config_filename() {
   echo "${base_name}${counter}${extension}"
 }
 
-create_config_from_last_commit() {
+validate_git_repo_for_config() {
   # Check if we're in a git repository
   if ! git rev-parse --git-dir >/dev/null 2>&1; then
     echo "Error: Not in a git repository" >&2
@@ -143,16 +143,17 @@ create_config_from_last_commit() {
     echo "Error: No commits found in repository" >&2
     exit 1
   fi
+}
 
-  echo "🔍 Analyzing last commit..."
+get_last_commit_info() {
+  local -n commit_info=$1
 
   # Get current directory as source path
-  local source_path
-  source_path=$(pwd)
+  commit_info[source_path]=$(pwd)
 
   # Get files changed in last commit
-  local changed_files
   mapfile -t changed_files < <(git diff-tree --no-commit-id --name-only -r HEAD)
+  commit_info[changed_files]="${changed_files[*]}"
 
   if [[ ${#changed_files[@]} -eq 0 ]]; then
     echo "Error: No files changed in last commit" >&2
@@ -160,31 +161,28 @@ create_config_from_last_commit() {
   fi
 
   # Get current branch name for new branch suggestion
-  local current_branch
-  current_branch=$(git branch --show-current)
-  local suggested_branch="${current_branch}-sync"
+  commit_info[current_branch]=$(git branch --show-current)
+  commit_info[suggested_branch]="${commit_info[current_branch]}-sync"
 
   # Get commit message from last commit
-  local commit_msg
-  commit_msg=$(git log -1 --pretty=format:"%B")
+  commit_info[commit_msg]=$(git log -1 --pretty=format:"%B")
+}
 
-  # Get next available config filename
-  local config_file
-  config_file=$(get_next_config_filename)
+write_config_file() {
+  local config_file="$1"
+  declare -A commit_info="$2"
 
-  echo "📝 Creating config file: $config_file"
-
-  # Create config file
   cat > "$config_file" << EOF
 # Configuration generated from last commit
 # $(git log -1 --pretty=format:"%h - %s (%an, %ar)")
 
-SOURCE_PATH="$source_path"
+SOURCE_PATH="${commit_info[source_path]}"
 
 FILE_NAMES=(
 EOF
 
   # Add each changed file
+  IFS=' ' read -ra changed_files <<< "${commit_info[changed_files]}"
   for file in "${changed_files[@]}"; do
     echo "  $file" >> "$config_file"
   done
@@ -198,9 +196,9 @@ TARGET_PATHS=(
   # /path/to/target/repo2
 )
 
-BRANCH_NAME="$suggested_branch"
+BRANCH_NAME="${commit_info[suggested_branch]}"
 
-MULTILINE_COMMIT_MSG="$commit_msg"
+MULTILINE_COMMIT_MSG="${commit_info[commit_msg]}"
 
 # Dirty handling options: skip, fail, stash, include-dirty
 DIRTY_HANDLING="skip"
@@ -208,17 +206,27 @@ DIRTY_HANDLING="skip"
 # Skip pushing to remote (commit locally only)
 SKIP_PUSH=false
 EOF
+}
+
+show_config_summary() {
+  local config_file="$1"
+  declare -A commit_info="$2"
 
   echo "✅ Config file created: $config_file"
   echo
   echo "📋 Summary:"
-  echo "  Source path: $source_path"
+  echo "  Source path: ${commit_info[source_path]}"
+
+  IFS=' ' read -ra changed_files <<< "${commit_info[changed_files]}"
   echo "  Files (${#changed_files[@]}):"
   for file in "${changed_files[@]}"; do
     echo "    - $file"
   done
-  echo "  Suggested branch: $suggested_branch"
-  echo "  Commit message: ${commit_msg:0:50}$([ ${#commit_msg} -gt 50 ] && echo "...")"
+
+  echo "  Suggested branch: ${commit_info[suggested_branch]}"
+
+  local msg="${commit_info[commit_msg]}"
+  echo "  Commit message: ${msg:0:50}$([ ${#msg} -gt 50 ] && echo "...")"
   echo
   echo "📝 Next steps:"
   echo "  1. Edit the config file: $config_file"
@@ -226,6 +234,113 @@ EOF
   echo "     - Adjust BRANCH_NAME and commit message if needed"
   echo "  2. Test with dry run: $SCRIPT_NAME --dry-run $config_file"
   echo "  3. Execute: $SCRIPT_NAME $config_file"
+}
+
+create_config_from_last_commit() {
+  validate_git_repo_for_config
+
+  echo "🔍 Analyzing last commit..."
+
+  declare -A commit_info
+  get_last_commit_info commit_info
+
+  # Get next available config filename
+  local config_file
+  config_file=$(get_next_config_filename)
+
+  echo "📝 Creating config file: $config_file"
+
+  write_config_file "$config_file" "$(declare -p commit_info)"
+  show_config_summary "$config_file" "$(declare -p commit_info)"
+}
+
+#=== CONFIG PARSING ===#
+parse_config_line() {
+  local line="$1"
+  local -n in_array_ref=$2
+  local -n in_multiline_ref=$3
+  local -n multiline_var_ref=$4
+  local -n multiline_content_ref=$5
+
+  # Handle multiline string continuation
+  if [[ -n "$in_multiline_ref" ]]; then
+    if [[ "$line" =~ ^[[:space:]]*\"[[:space:]]*$ ]]; then
+      # End of multiline string
+      declare -g "$multiline_var_ref=$multiline_content_ref"
+      in_multiline_ref=""
+      multiline_var_ref=""
+      multiline_content_ref=""
+    else
+      # Continue multiline string
+      if [[ -n "$multiline_content_ref" ]]; then
+        multiline_content_ref="$multiline_content_ref"$'\n'"$line"
+      else
+        multiline_content_ref="$line"
+      fi
+    fi
+    return 0
+  fi
+
+  # Handle array continuation
+  if [[ -n "$in_array_ref" ]]; then
+    if [[ "$line" =~ ^[[:space:]]*\)[[:space:]]*$ ]]; then
+      # End of array
+      in_array_ref=""
+    else
+      # Array element
+      local element
+      element=$(echo "$line" | sed 's/^[[:space:]]*//' | sed 's/[[:space:]]*$//')
+      case "$in_array_ref" in
+        "FILE_NAMES")
+          FILE_NAMES+=("$element")
+          ;;
+        "TARGET_PATHS")
+          TARGET_PATHS+=("$element")
+          ;;
+      esac
+    fi
+    return 0
+  fi
+
+  # Parse variable assignments
+  if [[ "$line" =~ ^[[:space:]]*([A-Z_]+)=(.*)$ ]]; then
+    local var_name="${BASH_REMATCH[1]}"
+    local var_value="${BASH_REMATCH[2]}"
+
+    # Handle array start
+    if [[ "$var_value" =~ ^[[:space:]]*\([[:space:]]*$ ]]; then
+      in_array_ref="$var_name"
+      case "$var_name" in
+        "FILE_NAMES")
+          FILE_NAMES=()
+          ;;
+        "TARGET_PATHS")
+          TARGET_PATHS=()
+          ;;
+      esac
+      return 0
+    fi
+
+    # Handle multiline string start
+    if [[ "$var_value" =~ ^\"(.*)$ ]]; then
+      local content="${BASH_REMATCH[1]}"
+      if [[ "$content" =~ ^(.*)\"[[:space:]]*$ ]]; then
+        # Single line string
+        content="${BASH_REMATCH[1]}"
+        declare -g "$var_name=$content"
+      else
+        # Start of multiline string
+        in_multiline_ref="true"
+        multiline_var_ref="$var_name"
+        multiline_content_ref="$content"
+      fi
+      return 0
+    fi
+
+    # Handle regular assignment
+    var_value=$(echo "$var_value" | sed 's/^"//' | sed 's/"$//')
+    declare -g "$var_name=$var_value"
+  fi
 }
 
 parse_config_file() {
@@ -238,7 +353,7 @@ parse_config_file() {
 
   echo "Reading config file: $config_file"
 
-  # Read config file line by line to handle arrays and multiline strings
+  # State variables for parsing
   local in_array=""
   local in_multiline=""
   local multiline_var=""
@@ -249,88 +364,11 @@ parse_config_file() {
     [[ "$line" =~ ^[[:space:]]*# ]] && continue
     [[ "$line" =~ ^[[:space:]]*$ ]] && continue
 
-    # Handle multiline string continuation
-    if [[ -n "$in_multiline" ]]; then
-      if [[ "$line" =~ ^[[:space:]]*\"[[:space:]]*$ ]]; then
-        # End of multiline string
-        declare -g "$multiline_var=$multiline_content"
-        in_multiline=""
-        multiline_var=""
-        multiline_content=""
-      else
-        # Continue multiline string
-        if [[ -n "$multiline_content" ]]; then
-          multiline_content="$multiline_content"$'\n'"$line"
-        else
-          multiline_content="$line"
-        fi
-      fi
-      continue
-    fi
-
-    # Handle array continuation
-    if [[ -n "$in_array" ]]; then
-      if [[ "$line" =~ ^[[:space:]]*\)[[:space:]]*$ ]]; then
-        # End of array
-        in_array=""
-      else
-        # Array element
-        local element
-        element=$(echo "$line" | sed 's/^[[:space:]]*//' | sed 's/[[:space:]]*$//')
-        case "$in_array" in
-          "FILE_NAMES")
-            FILE_NAMES+=("$element")
-            ;;
-          "TARGET_PATHS")
-            TARGET_PATHS+=("$element")
-            ;;
-        esac
-      fi
-      continue
-    fi
-
-    # Parse variable assignments
-    if [[ "$line" =~ ^[[:space:]]*([A-Z_]+)=(.*)$ ]]; then
-      local var_name="${BASH_REMATCH[1]}"
-      local var_value="${BASH_REMATCH[2]}"
-
-      # Handle array start
-      if [[ "$var_value" =~ ^[[:space:]]*\([[:space:]]*$ ]]; then
-        in_array="$var_name"
-        case "$var_name" in
-          "FILE_NAMES")
-            FILE_NAMES=()
-            ;;
-          "TARGET_PATHS")
-            TARGET_PATHS=()
-            ;;
-        esac
-        continue
-      fi
-
-      # Handle multiline string start
-      if [[ "$var_value" =~ ^\"(.*)$ ]]; then
-        local content="${BASH_REMATCH[1]}"
-        if [[ "$content" =~ ^(.*)\"[[:space:]]*$ ]]; then
-          # Single line string
-          content="${BASH_REMATCH[1]}"
-          declare -g "$var_name=$content"
-        else
-          # Start of multiline string
-          in_multiline="true"
-          multiline_var="$var_name"
-          multiline_content="$content"
-        fi
-        continue
-      fi
-
-      # Handle regular assignment
-      var_value=$(echo "$var_value" | sed 's/^"//' | sed 's/"$//')
-      declare -g "$var_name=$var_value"
-    fi
+    parse_config_line "$line" in_array in_multiline multiline_var multiline_content
   done < "$config_file"
 }
 
+#=== ARGUMENT PARSING ===#
 parse_args() {
   local config_file=""
 
@@ -405,7 +443,8 @@ parse_args() {
   fi
 }
 
-verify_args() {
+#=== VALIDATION ===#
+validate_source_path() {
   local errors=0
 
   if [[ -z "$SOURCE_PATH" ]]; then
@@ -415,6 +454,12 @@ verify_args() {
     echo "Error: Source path '$SOURCE_PATH' does not exist or is not a directory" >&2
     errors=$((errors + 1))
   fi
+
+  return $errors
+}
+
+validate_file_names() {
+  local errors=0
 
   if [[ ${#FILE_NAMES[@]} -eq 0 ]]; then
     echo "Error: At least one file name is required" >&2
@@ -427,6 +472,12 @@ verify_args() {
       fi
     done
   fi
+
+  return $errors
+}
+
+validate_target_paths() {
+  local errors=0
 
   if [[ ${#TARGET_PATHS[@]} -eq 0 ]]; then
     echo "Error: At least one target path is required" >&2
@@ -443,6 +494,12 @@ verify_args() {
     done
   fi
 
+  return $errors
+}
+
+validate_required_params() {
+  local errors=0
+
   if [[ -z "$BRANCH_NAME" ]]; then
     echo "Error: BRANCH_NAME is required" >&2
     errors=$((errors + 1))
@@ -452,6 +509,12 @@ verify_args() {
     echo "Error: MULTILINE_COMMIT_MSG is required" >&2
     errors=$((errors + 1))
   fi
+
+  return $errors
+}
+
+validate_dirty_handling() {
+  local errors=0
 
   case "$DIRTY_HANDLING" in
     skip|fail|stash|include-dirty)
@@ -463,13 +526,57 @@ verify_args() {
       ;;
   esac
 
-  if [[ $errors -gt 0 ]]; then
+  return $errors
+}
+
+verify_args() {
+  local total_errors=0
+
+  validate_source_path || total_errors=$((total_errors + $?))
+  validate_file_names || total_errors=$((total_errors + $?))
+  validate_target_paths || total_errors=$((total_errors + $?))
+  validate_required_params || total_errors=$((total_errors + $?))
+  validate_dirty_handling || total_errors=$((total_errors + $?))
+
+  if [[ $total_errors -gt 0 ]]; then
     echo "Use --help for usage information" >&2
     exit 1
   fi
 }
 
-show_dry_run_intentions() {
+#=== UTILITY FUNCTIONS ===#
+files_match() {
+  local target_path="$1"
+
+  for file in "${FILE_NAMES[@]}"; do
+    local source_file="$SOURCE_PATH/$file"
+    local target_file="$target_path/$file"
+
+    if [[ ! -f "$target_file" ]] || ! cmp -s "$source_file" "$target_file"; then
+      return 1
+    fi
+  done
+
+  return 0
+}
+
+is_repo_dirty() {
+  local target_path="$1"
+
+  pushd "$target_path" > /dev/null
+
+  # Check if repository has uncommitted changes
+  if ! git diff-index --quiet HEAD -- 2>/dev/null || ! git diff-index --quiet --cached HEAD -- 2>/dev/null; then
+    popd > /dev/null
+    return 0  # Repository is dirty
+  fi
+
+  popd > /dev/null
+  return 1  # Repository is clean
+}
+
+#=== DRY RUN ===#
+show_dry_run_summary() {
   echo "🔍 DRY RUN - Showing what would be done:"
   echo
   echo "📁 Source directory: $SOURCE_PATH"
@@ -484,55 +591,60 @@ show_dry_run_intentions() {
   echo "📤 Skip push: $SKIP_PUSH"
   echo
   echo "🎯 Target repositories (${#TARGET_PATHS[@]}):"
+}
+
+analyze_target_for_dry_run() {
+  local target="$1"
+  echo "  • $target"
+
+  # Check if files already match
+  if files_match "$target"; then
+    echo "    → Would skip (files already match)"
+    return 1  # Would skip
+  fi
+
+  # Check dirty status
+  if is_repo_dirty "$target"; then
+    case "$DIRTY_HANDLING" in
+      skip)
+        echo "    → Would skip (repository is dirty)"
+        return 1  # Would skip
+        ;;
+      fail)
+        echo "    → Would fail (repository is dirty and strategy is 'fail')"
+        ;;
+      stash)
+        echo "    → Would stash dirty changes, then process"
+        ;;
+      include-dirty)
+        echo "    → Would include dirty changes in commit"
+        ;;
+    esac
+  fi
+
+  echo "    → Would create branch '$BRANCH_NAME'"
+  echo "    → Would copy and commit files"
+  if [[ "$SKIP_PUSH" == "true" ]]; then
+    echo "    → Would skip push (--skip-push enabled)"
+  else
+    echo "    → Would push to origin"
+  fi
+
+  return 0  # Would process
+}
+
+show_dry_run_intentions() {
+  show_dry_run_summary
 
   local would_process=0
   local would_skip=0
 
   for target in "${TARGET_PATHS[@]}"; do
-    echo "  • $target"
-
-    # Check if files already match
-    if check_files_already_match "$target"; then
-      echo "    → Would skip (files already match)"
-      would_skip=$((would_skip + 1))
-      continue
-    fi
-
-    # Check dirty status
-    local has_dirty_files=false
-    pushd "$target" > /dev/null 2>&1
-    if ! git diff-index --quiet HEAD -- 2>/dev/null || ! git diff-index --quiet --cached HEAD -- 2>/dev/null; then
-      has_dirty_files=true
-    fi
-    popd > /dev/null 2>&1
-
-    if [[ "$has_dirty_files" == "true" ]]; then
-      case "$DIRTY_HANDLING" in
-        skip)
-          echo "    → Would skip (repository is dirty)"
-          would_skip=$((would_skip + 1))
-          continue
-          ;;
-        fail)
-          echo "    → Would fail (repository is dirty and strategy is 'fail')"
-          ;;
-        stash)
-          echo "    → Would stash dirty changes, then process"
-          ;;
-        include-dirty)
-          echo "    → Would include dirty changes in commit"
-          ;;
-      esac
-    fi
-
-    echo "    → Would create branch '$BRANCH_NAME'"
-    echo "    → Would copy and commit files"
-    if [[ "$SKIP_PUSH" == "true" ]]; then
-      echo "    → Would skip push (--skip-push enabled)"
+    if analyze_target_for_dry_run "$target"; then
+      would_process=$((would_process + 1))
     else
-      echo "    → Would push to origin"
+      would_skip=$((would_skip + 1))
     fi
-    would_process=$((would_process + 1))
   done
 
   echo
@@ -543,67 +655,36 @@ show_dry_run_intentions() {
   echo "To execute these operations, run without --dry-run flag"
 }
 
-check_files_already_match() {
-  local target_path="$1"
-  local all_match=true
-
-  for file in "${FILE_NAMES[@]}"; do
-    local source_file="$SOURCE_PATH/$file"
-    local target_file="$target_path/$file"
-
-    if [[ ! -f "$target_file" ]] || ! cmp -s "$source_file" "$target_file"; then
-      all_match=false
-      break
-    fi
-  done
-
-  if [[ "$all_match" == "true" ]]; then
-    if [[ "$DRY_RUN" == "false" ]]; then
-      echo "  ℹ️  Files already match in $target_path - skipping"
-    fi
-    return 0
-  else
-    return 1
-  fi
-}
-
+#=== DIRTY REPO HANDLING ===#
 handle_dirty_repo() {
   local target_path="$1"
-  local has_dirty_files=false
 
-  pushd "$target_path" > /dev/null
-
-  # Check if repository has uncommitted changes
-  if ! git diff-index --quiet HEAD -- 2>/dev/null || ! git diff-index --quiet --cached HEAD -- 2>/dev/null; then
-    has_dirty_files=true
+  if ! is_repo_dirty "$target_path"; then
+    return 0  # 0: Repository is clean, proceed
   fi
-
-  popd > /dev/null
-
-  if [[ "$has_dirty_files" == "false" ]]; then
-    return 0  # Repository is clean, proceed
-  fi
-
   case "$DIRTY_HANDLING" in
     skip)
-      echo "  ⚠️  Repository $target_path is dirty - skipping"
-      return 1
+      echo "  ⚠️  Repository $target_path is dirty - skipping" >&2
+      return 1  # 1: Skipped due to dirty repo
       ;;
     fail)
-      echo "Error: Repository $target_path is dirty and dirty-handling is set to 'fail'" >&2
-      echo "Exiting without making any changes" >&2
-      exit 1
+      echo "  ⚠️  Error: Repository $target_path is dirty and dirty-handling is set to 'fail'" >&2
+      return 2  # 2: Fail due to dirty repo
       ;;
     stash)
-      echo "  📦 Repository $target_path is dirty - stashing changes"
+      echo "  📦 Repository $target_path is dirty - stashing changes" >&2
       pushd "$target_path" > /dev/null
       git stash push -m "Auto-stash before script execution"
       popd > /dev/null
-      return 0
+      return 0  # 0: Proceed after stashing
       ;;
     include-dirty)
-      echo "  ⚠️  Repository $target_path is dirty - including dirty changes in commit"
-      return 0
+      echo "  ⚠️  Repository $target_path is dirty - including dirty changes in commit" >&2
+      return 0  # 0: Proceed including dirty changes
+      ;;
+    *)
+      echo "  ⚠️  Unknown dirty handling strategy: $DIRTY_HANDLING" >&2
+      return 9  # 9: Fail for unknown strategy
       ;;
   esac
 }
@@ -622,18 +703,9 @@ unstash_if_needed() {
   fi
 }
 
-repeated_command() {
+#=== MAIN OPERATIONS ===#
+copy_files_to_target() {
   local target_path="$1"
-
-  pushd "$target_path" > /dev/null
-
-  echo "  🔧 Processing directory: $target_path"
-
-  # Create and switch to branch
-  git checkout -b "$BRANCH_NAME" 2>/dev/null || {
-    echo "  ⚠️  Branch '$BRANCH_NAME' already exists, switching to it"
-    git checkout "$BRANCH_NAME"
-  }
 
   # Copy files from source
   for file in "${FILE_NAMES[@]}"; do
@@ -650,7 +722,9 @@ repeated_command() {
     echo "    📄 Copying $file"
     cp "$source_file" "$target_file"
   done
+}
 
+commit_changes() {
   # Add files to git
   for file in "${FILE_NAMES[@]}"; do
     git add "$file"
@@ -663,7 +737,9 @@ repeated_command() {
 
   # Commit changes
   git commit -m "$MULTILINE_COMMIT_MSG"
+}
 
+push_changes() {
   # Push to remote unless --skip-push is enabled
   if [[ "$SKIP_PUSH" == "true" ]]; then
     echo "  📋 Skipping push (--skip-push enabled)"
@@ -671,11 +747,29 @@ repeated_command() {
     echo "  🚀 Pushing branch '$BRANCH_NAME'"
     git push -u origin "$BRANCH_NAME"
   fi
+}
+
+process_target() {
+  local target_path="$1"
+
+  pushd "$target_path" > /dev/null
+
+  echo "  🔧 Processing directory: $target_path"
+
+  echo "  🌿 Creating and switching to branch: $BRANCH_NAME"
+  git checkout -b "$BRANCH_NAME" 2>/dev/null || {
+    echo "  ⚠️  Branch '$BRANCH_NAME' already exists, switching to it"
+    git checkout "$BRANCH_NAME"
+  }
+
+  copy_files_to_target "$target_path"
+  commit_changes
+  push_changes
 
   popd > /dev/null
 }
 
-repeat_for_each_target() {
+process_all_targets() {
   if [[ "$DRY_RUN" == "true" ]]; then
     show_dry_run_intentions
     return
@@ -686,26 +780,36 @@ repeat_for_each_target() {
 
   local processed=0
   local skipped=0
-
+  local fail_dirty=0
   for target in "${TARGET_PATHS[@]}"; do
     echo "🎯 Target: $target"
 
     # Check if files already match
-    if check_files_already_match "$target"; then
+    if files_match "$target"; then
+      echo "  ℹ️  Files already match in $target - skipping"
       skipped=$((skipped + 1))
       echo
       continue
     fi
 
     # Handle dirty repository
-    if ! handle_dirty_repo "$target"; then
+    set +e
+    handle_dirty_repo "$target"
+    local dirty_status=$?
+    set -e
+    if [[ $dirty_status -eq 1 ]]; then
       skipped=$((skipped + 1))
+      echo
+      continue
+    elif [[ $dirty_status -eq 2 ]]; then
+      skipped=$((skipped + 1))
+      fail_dirty=1
       echo
       continue
     fi
 
     # Execute git operations
-    repeated_command "$target"
+    process_target "$target"
 
     # Restore stash if needed
     unstash_if_needed "$target"
@@ -718,8 +822,13 @@ repeat_for_each_target() {
   echo "Summary:"
   echo "  📊 Processed: $processed directories"
   echo "  ⏭️  Skipped: $skipped directories"
-}
 
+  if [[ $fail_dirty -eq 1 ]]; then
+    echo "❌ At least one repository was dirty and dirty-handling was set to 'fail'."
+    exit 2
+  fi
+}
+#=== MAIN FUNCTION ===#
 main() {
   # Parse arguments or config file
   parse_args "$@"
@@ -728,7 +837,7 @@ main() {
   verify_args
 
   # Execute operations on each target
-  repeat_for_each_target
+  process_all_targets
 
   if [[ "$DRY_RUN" == "false" ]]; then
     echo "🎉 All operations completed successfully!"
