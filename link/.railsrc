@@ -4,14 +4,18 @@
 --skip-action-mailer
 --skip-action-text
 --skip-active-storage
---skip-action-cable
 --skip-bundle
+--skip-hotwire
+--skip-kamal
 --skip-keeps
---skip-test
+--skip-solid
 --skip-system-test
+--skip-test
+--skip-thruster
 #--javascript=bun # => devcontainer bun error
+--javascript=
 --css=sass
---devcontainer
+#--devcontainer
 # below removed as they no longer exist in rails 8
 #--skip-sprockets
 #--skip-webpack-install
